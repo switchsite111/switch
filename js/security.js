@@ -153,7 +153,11 @@
       } catch (e) { /* */ }
 
       // Перенаправляем на страницу ошибки
-      window.location.href = 'error.html?code=403&reason=security';
+      try {
+        window.location.href = 'error.html?code=403&reason=security';
+      } catch (e) {
+        document.body.innerHTML = '<div style="background:#000;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;font-family:\'Unbounded\',sans-serif;text-align:center;padding:20px;"><div><h1 style="font-size:4rem;margin-bottom:1rem;">🚫 403</h1><p style="color:#a1a1aa;">Доступ ограничен по соображениям безопасности SWITCH Shield.</p></div></div>';
+      }
     },
 
     checkBlocked() {
@@ -225,6 +229,9 @@
 
       Object.defineProperty(Element.prototype, 'innerHTML', {
         set(value) {
+          if (this.hasAttribute && this.hasAttribute('data-switch-safe')) {
+            return origInnerHTMLSetter.call(this, value);
+          }
           if (typeof value === 'string' && self.detectXSS(value)) {
             self.recordViolation('XSS_INNERHTML', 'Подозрительный innerHTML заблокирован');
             return origInnerHTMLSetter.call(this, self.sanitizeString(value));
@@ -267,10 +274,14 @@
         return origInsertAdjHTML.call(this, position, text);
       };
 
-      // Перехват eval
+      // Перехват eval с проверкой стека для своих скриптов
       const origEval = window.eval;
       window.eval = function (code) {
-        self.recordViolation('XSS_EVAL', 'eval() вызов заблокирован');
+        const stack = new Error().stack || '';
+        if (stack.includes('security.js') || stack.includes('script.js') || stack.includes('analytics.js') || stack.includes('switch')) {
+          return origEval(code);
+        }
+        self.recordViolation('XSS_EVAL', 'eval() вызов от стороннего скрипта заблокирован');
         self.log('⛔ eval() заблокирован: ' + String(code).substring(0, 100), 'error');
         return undefined;
       };
@@ -380,11 +391,14 @@
         }
       }, 8000);
 
-      // Проверка headless браузеров
+      // Проверка headless браузеров с исключением iOS и Safari
       const headlessSignals = [];
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
       if (navigator.webdriver) headlessSignals.push('webdriver');
       if (!navigator.languages || navigator.languages.length === 0) headlessSignals.push('no_languages');
-      if (navigator.plugins && navigator.plugins.length === 0 && !/mobile/i.test(navigator.userAgent)) {
+      if (navigator.plugins && navigator.plugins.length === 0 && !isMobile && !isSafari) {
         headlessSignals.push('no_plugins');
       }
       if (/HeadlessChrome|PhantomJS|Nightmare|Selenium|puppeteer/i.test(navigator.userAgent)) {
@@ -437,7 +451,7 @@
         }
       }, true);
 
-      // Защита от rapid-fire XHR
+      // Защита от rapid-fire XHR и Fetch
       const origOpen = XMLHttpRequest.prototype.open;
       const xhrTimestamps = [];
       XMLHttpRequest.prototype.open = function (...args) {
@@ -451,6 +465,23 @@
         }
         return origOpen.apply(this, args);
       };
+
+      if (window.fetch) {
+        const origFetch = window.fetch;
+        const fetchTimestamps = [];
+        window.fetch = function (...args) {
+          const now = Date.now();
+          fetchTimestamps.push(now);
+          while (fetchTimestamps.length > 0 && fetchTimestamps[0] < now - 1000) {
+            fetchTimestamps.shift();
+          }
+          if (fetchTimestamps.length > 50) {
+            self.recordViolation('RATE_LIMIT_FETCH', `${fetchTimestamps.length} fetch запросов за секунду`);
+            return Promise.reject(new Error('Rate limit exceeded'));
+          }
+          return origFetch.apply(this, args);
+        };
+      }
 
       this.log('🔒 Rate Limiter: активен');
     },
@@ -508,53 +539,68 @@
     honeypotSystem() {
       const self = this;
 
-      // Создаём скрытые honeypot-поля во всех формах
       document.querySelectorAll('form').forEach((form) => {
         if (form.querySelector('[data-switch-honeypot]')) return;
 
+        // Создаём скрытые ловушки с заманчивыми именами для ботов (website, fax_number)
         const honeypot = document.createElement('input');
         honeypot.type = 'text';
-        honeypot.name = 'website_url_confirm'; // Боты заполняют это поле
+        honeypot.name = 'website_url_confirm';
         honeypot.setAttribute('data-switch-honeypot', 'true');
         honeypot.setAttribute('tabindex', '-1');
         honeypot.setAttribute('autocomplete', 'off');
         honeypot.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:0;height:0;opacity:0;pointer-events:none;';
         honeypot.setAttribute('aria-hidden', 'true');
+
+        const faxHoneypot = document.createElement('input');
+        faxHoneypot.type = 'text';
+        faxHoneypot.name = 'fax_number';
+        faxHoneypot.setAttribute('tabindex', '-1');
+        faxHoneypot.setAttribute('autocomplete', 'off');
+        faxHoneypot.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:0;height:0;opacity:0;pointer-events:none;';
+        faxHoneypot.setAttribute('aria-hidden', 'true');
+
         form.appendChild(honeypot);
+        form.appendChild(faxHoneypot);
 
         form.addEventListener('submit', (e) => {
-          if (honeypot.value.length > 0) {
+          const botCheckInput = form.querySelector('input[name="botcheck"]');
+          const isBotChecked = botCheckInput && botCheckInput.checked;
+
+          if (honeypot.value.length > 0 || faxHoneypot.value.length > 0 || isBotChecked) {
             e.preventDefault();
-            self.recordViolation('HONEYPOT', 'Бот заполнил honeypot-поле');
+            self.recordViolation('HONEYPOT', 'Зафиксировано автоматическое заполнение ловушки бота');
           }
         });
       });
 
-      this.log('🔒 Honeypot System: активен');
+      this.log('🔒 Honeypot System: активен (расширенная фильтрация)');
     },
 
     /* ═══════════════════════════════════════════════════════════════════
        МОДУЛЬ 7: CSP ENFORCEMENT (мета-тег)
        ═══════════════════════════════════════════════════════════════════ */
     enforceCSP() {
-      // Добавляем мета-тег CSP, если его ещё нет
-      if (!document.querySelector('meta[http-equiv="Content-Security-Policy"]')) {
-        const meta = document.createElement('meta');
-        meta.httpEquiv = 'Content-Security-Policy';
-        meta.content = [
-          "default-src 'self'",
-          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com https://fonts.gstatic.com https://www.googletagmanager.com https://www.google-analytics.com https://mc.yandex.ru https://mc.yandex.com",
-          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
-          "img-src 'self' data: https: blob:",
-          "font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com data:",
-          "connect-src 'self' https://www.google-analytics.com https://mc.yandex.ru https://mc.yandex.com https://formspree.io",
-          "frame-src 'none'",
-          "object-src 'none'",
-          "base-uri 'self'",
-          "form-action 'self' https://formspree.io",
-        ].join('; ');
-        document.head.prepend(meta);
+      // Проверяем, есть ли уже CSP в мета-тегах HTML
+      if (document.querySelector('meta[http-equiv="Content-Security-Policy"]')) {
+        this.log('✅ CSP уже установлен в HTML, пропущена динамическая генерация');
+        return;
       }
+      const meta = document.createElement('meta');
+      meta.httpEquiv = 'Content-Security-Policy';
+      meta.content = [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com https://fonts.gstatic.com https://www.googletagmanager.com https://www.google-analytics.com https://mc.yandex.ru https://mc.yandex.com https://cdn.jsdelivr.net",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com",
+        "img-src 'self' data: https: blob:",
+        "font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com data:",
+        "connect-src 'self' https://www.google-analytics.com https://mc.yandex.ru https://mc.yandex.com https://formspree.io https://api.web3forms.com",
+        "frame-src 'self' https://www.youtube.com https://youtu.be https://www.google.com/maps",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self' https://formspree.io https://api.web3forms.com",
+      ].join('; ');
+      document.head.prepend(meta);
 
       this.log('🔒 CSP Enforcement: активен');
     },
@@ -565,15 +611,14 @@
     sessionIntegrity() {
       const self = this;
 
-      // Fingerprint-based session binding
-      const fp = this.generateFingerprint();
-
       try {
-        const storedFp = sessionStorage.getItem('switch_shield_fp');
-        if (storedFp && storedFp !== fp) {
+        let storedFp = sessionStorage.getItem('switch_shield_fp');
+        const currentFp = this.generateFingerprint();
+        if (!storedFp) {
+          sessionStorage.setItem('switch_shield_fp', currentFp);
+        } else if (storedFp !== currentFp) {
           this.recordViolation('SESSION_HIJACK', 'Fingerprint сессии изменился');
         }
-        sessionStorage.setItem('switch_shield_fp', fp);
       } catch (e) { /* storage disabled */ }
 
       // Защита от tab-napping
@@ -619,29 +664,29 @@
     formProtection() {
       const self = this;
 
+      // Автоматическое заполнение элемента #csrf_token при наличии
+      const csrfInput = document.getElementById('csrf_token');
+      const sessionToken = self.generateSessionId();
+      if (csrfInput) {
+        csrfInput.value = sessionToken;
+      }
+
       document.querySelectorAll('form').forEach((form) => {
         // Добавляем CSRF-like токен
-        const token = self.generateSessionId().substring(0, 16);
+        const token = sessionToken.substring(0, 16);
         const hiddenField = document.createElement('input');
         hiddenField.type = 'hidden';
         hiddenField.name = '_switch_token';
         hiddenField.value = token;
         form.appendChild(hiddenField);
 
-        // Замер времени заполнения (боты заполняют < 2 сек)
-        const formLoadTime = Date.now();
         form.addEventListener('submit', (e) => {
-          const fillTime = Date.now() - formLoadTime;
-          if (fillTime < 2000) {
-            e.preventDefault();
-            self.recordViolation('FORM_TIMING', `Форма заполнена за ${fillTime}мс — подозрение на бота`);
-          }
-
           // Проверяем токен
           if (hiddenField.value !== token) {
             e.preventDefault();
             self.recordViolation('FORM_CSRF', 'CSRF-токен формы изменён');
           }
+        });
         });
       });
 
@@ -711,15 +756,26 @@
     domProtection() {
       const self = this;
 
-      // Блокировка создания нежелательных элементов
-      const dangerousTags = ['iframe', 'object', 'embed', 'applet', 'base'];
+      // Белый список разрешённых доменов для iframe
+      const allowedIframeDomains = ['youtube.com', 'youtu.be', 'google.com', 'vimeo.com', 'vk.com'];
+      const dangerousTags = ['object', 'embed', 'applet', 'base'];
+
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === 1 && dangerousTags.includes(node.tagName.toLowerCase())) {
+            if (node.nodeType === 1) {
               const tag = node.tagName.toLowerCase();
-              node.remove();
-              self.recordViolation('DOM_DANGEROUS_TAG', `<${tag}> удалён из DOM`);
+              if (tag === 'iframe') {
+                const src = node.getAttribute('src') || '';
+                const isAllowed = allowedIframeDomains.some(domain => src.includes(domain));
+                if (!isAllowed) {
+                  node.remove();
+                  self.recordViolation('DOM_DANGEROUS_TAG', `<iframe src="${src}"> удалён из DOM (не в белом списке)`);
+                }
+              } else if (dangerousTags.includes(tag)) {
+                node.remove();
+                self.recordViolation('DOM_DANGEROUS_TAG', `<${tag}> удалён из DOM`);
+              }
             }
           });
         });
@@ -892,3 +948,39 @@
   window.__SWITCH_SHIELD = SWITCH_SHIELD;
 
 })();
+
+// ===== ГЕНЕРАЦИЯ CSRF-ТОКЕНА =====
+(function() {
+  const csrfInput = document.getElementById('csrf_token');
+  if (csrfInput) {
+    csrfInput.value = btoa(Math.random().toString(36).substring(2) + Date.now().toString(36));
+  }
+})();
+
+// ===== ВАЛИДАЦИЯ ФОРМЫ ПЕРЕД ОТПРАВКОЙ =====
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('web3forms-contact-form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      const name = document.getElementById('form-name');
+      const message = document.getElementById('form-message');
+      let hasError = false;
+
+      // Проверка имени на HTML-теги
+      if (name && (name.value.includes('<') || name.value.includes('>'))) {
+        alert('⚠️ Имя не должно содержать HTML-теги');
+        hasError = true;
+      }
+
+      // Проверка сообщения на опасные символы
+      if (message && (message.value.includes('<script') || message.value.includes('onerror'))) {
+        alert('⚠️ Сообщение содержит подозрительный код');
+        hasError = true;
+      }
+
+      if (hasError) {
+        e.preventDefault();
+      }
+    });
+  }
+});

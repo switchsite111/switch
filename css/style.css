@@ -244,7 +244,7 @@ ul {
 }
 
 
-/* Light Theme Variables & Reset */
+//* Light Theme Variables & Reset — Pure Minimalist Monochrome */
 html.light-theme {
   color-scheme: light !important;
   background-color: #ffffff !important;
@@ -254,19 +254,19 @@ html.light-theme {
 body.light-theme {
   color-scheme: light !important;
   --bg-dark: #ffffff;
-  --bg-card: #ffffff;
-  --bg-card-hover: #f8fafc;
-  --border-color: #e2e8f0;
-  --border-color-glow: #cbd5e1;
+  --bg-card: #fafafa;
+  --bg-card-hover: #f4f4f5;
+  --border-color: #e4e4e7;
+  --border-color-glow: #d4d4d8;
   
   --accent-white: #000000;
-  --accent-gray: #1e293b;
-  --accent-gradient-text: linear-gradient(135deg, #000000 0%, #1e293b 100%);
-  --accent-gradient-btn: linear-gradient(135deg, #000000 0%, #0f172a 100%);
+  --accent-gray: #18181b;
+  --accent-gradient-text: linear-gradient(135deg, #000000 0%, #27272a 100%);
+  --accent-gradient-btn: linear-gradient(135deg, #000000 0%, #18181b 100%);
 
   --text-main: #000000;
-  --text-muted: #1e293b;
-  --text-dim: #475569;
+  --text-muted: #27272a;
+  --text-dim: #71717a;
   background-color: #ffffff !important;
   background: #ffffff !important;
   color: #000000 !important;
@@ -317,7 +317,7 @@ body.light-theme .step-desc,
 body.light-theme .contact-info-text,
 body.light-theme .faq-body p,
 body.light-theme .stat-item p {
-  color: #1e293b !important;
+  color: #3f3f46 !important;
 }
 
 body.light-theme .step-num,
@@ -332,9 +332,11 @@ body.light-theme .hero-code-box * {
 
 @media (min-width: 993px) {
   body.light-theme .header.scrolled {
-    background: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e4e4e7;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
   }
 }
 
@@ -345,11 +347,11 @@ body.light-theme .logo {
 body.light-theme .logo-icon {
   background: #000000;
   color: #ffffff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
 }
 
 body.light-theme .nav-link {
-  color: #1e293b;
+  color: #27272a;
 }
 body.light-theme .nav-link:hover,
 body.light-theme .nav-link.active {
@@ -361,16 +363,16 @@ body.light-theme .nav-link::after {
 
 body.light-theme .icon-btn {
   background: #ffffff;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #e4e4e7;
   color: #000000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 body.light-theme .icon-btn:hover {
-  background: #f1f5f9;
-  border-color: #94a3b8;
+  background: #f4f4f5;
+  border-color: #d4d4d8;
 }
 
-/* LIGHT THEME: Strict Rule for Dark Elements to ALWAYS stay Crisp White */
+/* LIGHT THEME: Dark Elements Stay Crisp White */
 body.light-theme .btn-primary,
 body.light-theme .btn-primary *,
 body.light-theme .btn-primary span,
@@ -391,11 +393,11 @@ body.light-theme .logo-icon svg {
 
 body.light-theme .btn-primary {
   background: #000000 !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18) !important;
 }
 body.light-theme .btn-primary:hover {
-  background: #1e293b !important;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35) !important;
+  background: #18181b !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25) !important;
 }
 
 body.light-theme .hero-code-box {
@@ -415,27 +417,27 @@ body.light-theme .portfolio-follower-btn {
 body.light-theme .btn-secondary {
   background: #ffffff;
   color: #000000;
-  border: 1px solid #cbd5e1;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e4e4e7;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
 }
 body.light-theme .btn-secondary:hover {
-  background: #f8fafc;
-  border-color: #94a3b8;
+  background: #f4f4f5;
+  border-color: #d4d4d8;
 }
 
 body.light-theme .section-tag,
 body.light-theme .hero-badge {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: #fafafa;
+  border: 1px solid #e4e4e7;
   color: #000000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
 }
 body.light-theme .section-tag svg {
   color: #000000;
 }
 body.light-theme .pulse-dot {
   background: #000000;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 body.light-theme .service-card,
@@ -444,51 +446,53 @@ body.light-theme .portfolio-card,
 body.light-theme .process-step,
 body.light-theme .faq-item,
 body.light-theme .contact-box {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  background: #fafafa;
+  border: 1px solid #e4e4e7;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
 }
+
 body.light-theme .service-card:hover,
 body.light-theme .process-step:hover,
 body.light-theme .faq-item:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  border-color: #d4d4d8;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
 }
 
 body.light-theme .service-icon,
 body.light-theme .detail-icon,
 body.light-theme .faq-icon {
-  background: #f1f5f9;
+  background: #f4f4f5;
   color: #000000;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #e4e4e7;
 }
 
 body.light-theme .service-features li {
-  color: #1e293b;
+  color: #27272a;
 }
 body.light-theme .service-features li svg {
   color: #000000;
 }
 
 body.light-theme .calc-pill {
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  color: #1e293b;
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  color: #27272a;
 }
 body.light-theme .calc-pill:hover {
-  background: #e2e8f0;
+  background: #e4e4e7;
   color: #000000;
 }
 body.light-theme .calc-pill.active {
   background: #000000;
   border-color: #000000;
   color: #ffffff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 body.light-theme .calc-summary {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: #fafafa;
+  border: 1px solid #e4e4e7;
 }
 body.light-theme .calc-price-val {
   color: #000000;
@@ -496,26 +500,26 @@ body.light-theme .calc-price-val {
 body.light-theme .calc-price-label,
 body.light-theme .calc-time,
 body.light-theme .calc-group-title {
-  color: #1e293b;
+  color: #27272a;
 }
 
 body.light-theme .portfolio-info {
-  background: #ffffff;
+  background: #fafafa;
 }
 body.light-theme .portfolio-desc {
-  color: #1e293b !important;
+  color: #27272a !important;
 }
 body.light-theme .portfolio-tag {
-  color: #475569;
+  color: #71717a;
 }
 body.light-theme .portfolio-follower-btn {
   background: #000000;
   color: #ffffff;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 body.light-theme .step-num {
-  color: rgba(0, 0, 0, 0.15);
+  color: rgba(0, 0, 0, 0.12);
 }
 body.light-theme .process-step:hover .step-num {
   color: #000000;
@@ -532,35 +536,35 @@ body.light-theme .form-input,
 body.light-theme .form-textarea,
 body.light-theme .form-select {
   background: #ffffff;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #e4e4e7;
   color: #000000;
 }
 body.light-theme .form-input::placeholder,
 body.light-theme .form-textarea::placeholder {
-  color: #64748b;
+  color: #a1a1aa;
 }
 body.light-theme .form-input:focus,
 body.light-theme .form-textarea:focus,
 body.light-theme .form-select:focus {
   border-color: #000000;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
 }
 
 body.light-theme .detail-label {
-  color: #475569;
+  color: #71717a;
 }
 body.light-theme .detail-val {
   color: #000000;
 }
 
 body.light-theme .footer {
-  background: #f1f5f9;
-  border-top: 1px solid #e2e8f0;
-  color: #1e293b;
+  background: #fafafa;
+  border-top: 1px solid #e4e4e7;
+  color: #27272a;
 }
 body.light-theme .footer-bottom {
-  border-top-color: #e2e8f0;
-  color: #475569;
+  border-top-color: #e4e4e7;
+  color: #71717a;
 }
 body.light-theme .footer-bottom a {
   color: #000000 !important;
@@ -2734,157 +2738,3 @@ html.light-theme {
   color: #0f172a !important;
 }
 
-body.light-theme {
-  background: #f8fafc !important;
-}
-
-body.light-theme .header.scrolled {
-  background: rgba(255, 255, 255, 0.9) !important;
-  border-bottom: 1px solid #cbd5e1 !important;
-}
-
-body.light-theme .logo {
-  color: #0f172a !important;
-}
-
-body.light-theme .nav-link {
-  color: #334155 !important;
-}
-
-body.light-theme .nav-link:hover {
-  color: #0f172a !important;
-}
-
-body.light-theme .hero-title,
-body.light-theme .section-title,
-body.light-theme .service-title,
-body.light-theme .step-title,
-body.light-theme .contact-info-title,
-body.light-theme .faq-header h4 {
-  color: #0f172a !important;
-}
-
-body.light-theme .hero-description,
-body.light-theme .section-subtitle,
-body.light-theme .service-desc,
-body.light-theme .step-desc,
-body.light-theme .contact-info-text,
-body.light-theme .faq-body p {
-  color: #334155 !important;
-}
-
-body.light-theme .hero-code-box {
-  background: #ffffff !important;
-  border-color: #cbd5e1 !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
-}
-
-body.light-theme .code-header {
-  background: #f1f5f9 !important;
-  border-bottom: 1px solid #cbd5e1 !important;
-}
-
-body.light-theme .code-filename {
-  color: #64748b !important;
-}
-
-body.light-theme .service-card,
-body.light-theme .calc-box,
-body.light-theme .process-step,
-body.light-theme .faq-item,
-body.light-theme .contact-box {
-  background: #ffffff !important;
-  border-color: #cbd5e1 !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
-}
-
-body.light-theme .portfolio-card {
-  background: #ffffff !important;
-  border: 1px dashed #cbd5e1 !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
-}
-
-body.light-theme .portfolio-icon-wrapper {
-  background: #f1f5f9 !important;
-  border-color: #cbd5e1 !important;
-  color: #0f172a !important;
-}
-
-body.light-theme .portfolio-icon-wrapper svg {
-  stroke: #0f172a !important;
-}
-
-body.light-theme .portfolio-tag {
-  color: #64748b !important;
-}
-
-body.light-theme .portfolio-card-title {
-  color: #0f172a !important;
-}
-
-body.light-theme .portfolio-card-desc {
-  color: #334155 !important;
-}
-
-body.light-theme .calc-pill {
-  background: #f1f5f9 !important;
-  color: #334155 !important;
-  border-color: #cbd5e1 !important;
-}
-
-body.light-theme .calc-pill.active {
-  background: #0f172a !important;
-  color: #ffffff !important;
-  border-color: #0f172a !important;
-}
-
-body.light-theme .calc-price-val {
-  color: #0f172a !important;
-}
-
-body.light-theme .calc-price-label,
-body.light-theme .calc-time {
-  color: #64748b !important;
-}
-
-body.light-theme .form-input,
-body.light-theme .form-select,
-body.light-theme .form-textarea {
-  background: #f8fafc !important;
-  border-color: #cbd5e1 !important;
-  color: #0f172a !important;
-}
-
-body.light-theme .form-label {
-  color: #0f172a !important;
-}
-
-body.light-theme .btn-primary {
-  background: #0f172a !important;
-  color: #ffffff !important;
-}
-
-body.light-theme .btn-secondary {
-  background: #f1f5f9 !important;
-  color: #0f172a !important;
-  border-color: #cbd5e1 !important;
-}
-
-body.light-theme .nav-menu {
-  background: #ffffff !important;
-  border-color: #cbd5e1 !important;
-}
-
-body.light-theme .footer {
-  border-top: 1px solid #cbd5e1 !important;
-  background: #f8fafc !important;
-  color: #334155 !important;
-}
-
-body.light-theme .footer-bottom {
-  color: #64748b !important;
-}
-
-body.light-theme .footer-bottom a {
-  color: #0f172a !important;
-}

@@ -129,10 +129,10 @@
       this.currentSession = {
         sessionId: this.sessionId,
         visitorId: this.visitorId,
-        ip: '127.0.0.1 (Локальный)',
-        city: 'Москва',
-        country: 'Россия',
-        countryCode: 'RU',
+        ip: 'Загрузка...',
+        city: 'Определение...',
+        country: 'Определение...',
+        countryCode: '--',
         device: device.type,
         deviceIcon: device.icon,
         os: os,
@@ -146,11 +146,11 @@
         isOnline: true
       };
 
-      // Fetch Geolocation/IP asynchronously
-      this.fetchGeoIP();
-
       // Save initial session
       this.saveSession(this.currentSession);
+
+      // Fetch Geolocation/IP asynchronously
+      this.fetchGeoIP();
 
       // Track hash & section navigation
       window.addEventListener('hashchange', () => {

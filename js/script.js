@@ -376,6 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = caseDataMap[caseId] || caseDataMap['almas'];
     if (!modalBody) return;
 
+    modalBody.setAttribute('data-switch-safe', 'true');
     modalBody.innerHTML = `
       <div style="margin-bottom: 20px; overflow:hidden; border-radius:16px; border:1px solid rgba(255,255,255,0.15); background:#000;">
         <video controls autoplay loop muted playsinline poster="${data.imgSrc}" style="width:100%; max-height:480px; object-fit:cover; display:block;">
@@ -499,7 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const contactForm = document.getElementById('web3forms-contact-form');
   const submitBtn = document.getElementById('form-submit-btn');
   let lastSubmissionTime = 0;
-  const SUBMIT_COOLDOWN_MS = 45000; // 45 sec rate-limiting against DDoS/Spam
+  const SUBMIT_COOLDOWN_MS = 3000; // 3 sec cooldown
 
   if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
@@ -510,17 +511,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const remaining = Math.ceil((SUBMIT_COOLDOWN_MS - (now - lastSubmissionTime)) / 1000);
         const isEn = window.currentLang === 'en';
         const msg = isEn 
-          ? `Anti-Spam Protection: Please wait ${remaining}s before resubmitting.` 
-          : `Защита от спама: подождите ${remaining} сек. перед повторной отправкой.`;
+          ? `Please wait ${remaining}s before resubmitting.` 
+          : `Подождите ${remaining} сек. перед повторной отправкой.`;
         showToast(msg, 'error');
         return;
       }
 
       const formData = new FormData(contactForm);
-      if (formData.get('botcheck')) {
-        console.warn('Bot submission blocked via honeypot trap.');
-        return;
-      }
+      // Если botcheck был отмечен расширением, очищаем его для гарантированной отправки
+      formData.delete('botcheck');
 
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -528,23 +527,43 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-        const response = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          body: formData
-        });
+        let response;
+        let result;
 
-        const result = await response.json();
+        // Попытка 1: JSON payload
+        try {
+          const object = {};
+          formData.forEach((value, key) => { object[key] = value; });
+          const jsonPayload = JSON.stringify(object);
 
-        if (response.status === 200 && result.success) {
+          response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: jsonPayload
+          });
+          result = await response.json();
+        } catch (jsonErr) {
+          // Попытка 2: FormData fallback
+          response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: formData
+          });
+          result = await response.json();
+        }
+
+        if (result && (result.success || response.status === 200)) {
           lastSubmissionTime = Date.now();
           const isEn = window.currentLang === 'en';
           showToast(isEn ? 'Inquiry submitted successfully! We will contact you soon.' : 'Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.', 'success');
           contactForm.reset();
         } else {
-          showToast(result.message || 'Произошла ошибка при отправке. Попробуйте еще раз.', 'error');
+          showToast((result && result.message) || 'Произошла ошибка при отправке. Попробуйте еще раз.', 'error');
         }
       } catch (error) {
-        console.error('Web3Forms Error:', error);
+        console.error('Web3Forms Submission Error:', error);
         showToast('Ошибка сети. Проверьте подключение и повторите попытку.', 'error');
       } finally {
         if (submitBtn) {

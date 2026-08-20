@@ -26,6 +26,28 @@
   <meta name="twitter:title" content="SWITCH Web Studio — Разработка сайтов">
   <meta name="twitter:description" content="Премиальные сайты, быстрый код и уникальный веб-дизайн.">
 
+  <!-- ====== КИБЕРЗАЩИТА: Content-Security-Policy ====== -->
+  <meta http-equiv="Content-Security-Policy" 
+        content="default-src 'self'; 
+                 script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com; 
+                 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+                 font-src 'self' https://fonts.gstatic.com; 
+                 img-src 'self' data: https: blob:; 
+                 connect-src 'self' https://api.web3forms.com https://ipapi.co https://api.ipify.org; 
+                 frame-ancestors 'none'; 
+                 form-action 'self' https://api.web3forms.com; 
+                 base-uri 'self'; 
+                 object-src 'none';">
+
+  <!-- ====== ЗАЩИТА ОТ КЛИКДЖЕКИНГА (дубль для старых браузеров) ====== -->
+  <meta http-equiv="X-Frame-Options" content="DENY">
+
+  <!-- ====== ЗАЩИТА ОТ MIME-SNIFFING ====== -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
+  <!-- ====== КОНТРОЛЬ REFERER ====== -->
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
   <!-- Google Fonts: Unbounded (Headings) + Sora (Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +56,7 @@
     rel="stylesheet">
 
   <!-- CSS Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=2.0">
+  <link rel="stylesheet" href="css/style.css?v=6.0">
   <style>
     @media (max-width: 992px) {
       .header,
@@ -396,7 +418,7 @@
         <div class="portfolio-card reveal-flip">
           <div class="portfolio-icon-wrapper">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
             </svg>
           </div>
           <div class="portfolio-tag" data-ru="Скоро публикация" data-en="Coming Soon">Скоро публикация</div>
@@ -549,7 +571,7 @@
               </div>
               <div>
                 <div class="detail-label" data-ru="Email для связи" data-en="Contact Email">Email для связи</div>
-                <div class="detail-val">switchsite111@gmail.com</div>
+                <div class="detail-val">&#115;&#119;&#105;&#116;&#99;&#104;&#115;&#105;&#116;&#101;&#49;&#49;&#49;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</div>
               </div>
             </div>
 
@@ -564,18 +586,6 @@
                 <div class="detail-val"><a href="https://t.me/switchbuilder" target="_blank" rel="noopener" id="contact-tg-link" style="color: inherit; text-decoration: underline;">@switchbuilder</a></div>
               </div>
             </div>
-
-            <div class="detail-item">
-              <div class="detail-icon">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                </svg>
-              </div>
-              <div>
-                <div class="detail-label" data-ru="Студия" data-en="Studio">Студия</div>
-                <div class="detail-val">SWITCH Studio</div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -586,6 +596,8 @@
             <input type="hidden" name="access_key" value="fa232290-8a0a-4951-a77f-379ac39972b8">
             <input type="hidden" name="subject" value="Новая заявка на разработку сайта | SWITCH STUDIO">
             <input type="hidden" name="from_name" value="SWITCH Studio">
+            <!-- CSRF-токен для защиты от подделки запросов -->
+            <input type="hidden" name="csrf_token" id="csrf_token">
             <!-- Anti-DDoS & Anti-Bot Honeypot Trap -->
             <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
 
@@ -658,10 +670,12 @@
           <div class="logo-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="2" width="7.5" height="20" rx="3.75" />
-              <circle cx="6.75" cy="7" r="1.2" fill="currentColor" />
-              <rect x="13.5" y="2" width="7.5" height="20" rx="3.75" />
-              <circle cx="17.25" cy="17" r="1.2" fill="currentColor" />
+              <rect class="joycon-left" x="3" y="2" width="7.5" height="20" rx="3.75" fill="currentColor"
+                fill-opacity="0.12" />
+              <circle class="joycon-left-btn" cx="6.75" cy="7" r="1.3" fill="currentColor" />
+              <rect class="joycon-right" x="13.5" y="2" width="7.5" height="20" rx="3.75" fill="currentColor"
+                fill-opacity="0.12" />
+              <circle class="joycon-right-btn" cx="17.25" cy="17" r="1.3" fill="currentColor" />
             </svg>
           </div>
           <span>SWITCH</span>
@@ -672,7 +686,7 @@
         <div style="display: flex; align-items: center; gap: 8px;">
           <span>© 2026 SWITCH STUDIO. Все права защищены.</span>
         </div>
-        <div>Прием заявок: <a href="mailto:switchsite111@gmail.com" style="color:#ffffff; text-decoration:underline;">switchsite111@gmail.com</a> | Telegram: <a href="https://t.me/switchbuilder" id="footer-tg-link" style="color:#ffffff; text-decoration:underline;" target="_blank" rel="noopener">@switchbuilder</a></div>
+        <div>Прием заявок: <a href="mailto:switchsite111@gmail.com" style="color:inherit; text-decoration:underline;">switchsite111@gmail.com</a> | Telegram: <a href="https://t.me/switchbuilder" id="footer-tg-link" style="color:inherit; text-decoration:underline;" target="_blank" rel="noopener">@switchbuilder</a></div>
       </div>
     </div>
   </footer>
@@ -680,11 +694,11 @@
 
 
   <!-- SWITCH Cyber Kinetic Shield — Security System -->
-  <script src="js/security.js?v=2.0" data-switch-safe></script>
+  <script src="js/security.js?v=6.0" data-switch-safe></script>
 
   <!-- JavaScript Modules -->
   <script src="js/analytics.js" data-switch-safe></script>
-  <script src="js/script.js?v=2.0" data-switch-safe></script>
+  <script src="js/script.js?v=6.0" data-switch-safe></script>
 </body>
 
 </html>
