@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.clearRect(0, 0, width, height);
     const isLight = document.body.classList.contains('light-theme');
     const pColor = isLight ? '0, 0, 0' : '255, 255, 255';
-    const baseAlpha = isLight ? 0.32 : 0.20;
+    const baseAlpha = isLight ? 0.05 : 0.15;
 
     for (let x = gridSpacing / 2; x < width; x += gridSpacing) {
       for (let y = gridSpacing / 2; y < height; y += gridSpacing) {
@@ -86,12 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const dist = Math.sqrt(dx * dx + dy * dy);
         
         let alpha = baseAlpha;
-        let radius = isLight ? 1.4 : 1.25;
+        let radius = isLight ? 1.1 : 1.25;
 
         if (dist < mouse.radius) {
           const factor = (1 - dist / mouse.radius);
-          alpha += factor * 0.45;
-          radius += factor * 1.6;
+          alpha += factor * (isLight ? 0.12 : 0.35);
+          radius += factor * 1.2;
         }
 
         ctx.beginPath();
@@ -104,15 +104,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   animateDotGrid();
 
-  // Theme Switcher (Dark / Light) with SVG Sun/Moon Icons
+  // Theme Switcher (Dark / Light) with SVG Sun/Moon Icons & Persistence
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
   const moonIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
   const sunIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
 
+  // Restore saved theme preference
+  const savedTheme = localStorage.getItem('switch_theme');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-theme');
+    document.documentElement.classList.add('light-theme');
+    if (themeToggleBtn) themeToggleBtn.innerHTML = sunIcon;
+  }
+
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener('click', () => {
       document.body.classList.toggle('light-theme');
+      document.documentElement.classList.toggle('light-theme');
       const isLight = document.body.classList.contains('light-theme');
+      localStorage.setItem('switch_theme', isLight ? 'light' : 'dark');
       themeToggleBtn.innerHTML = isLight ? sunIcon : moonIcon;
     });
   }
@@ -530,10 +540,6 @@ document.addEventListener('DOMContentLoaded', () => {
           const isEn = window.currentLang === 'en';
           showToast(isEn ? 'Inquiry submitted successfully! We will contact you soon.' : 'Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.', 'success');
           contactForm.reset();
-          if (fileText && fileLabel) {
-            fileText.textContent = isEn ? 'Attach requirements or layout (up to 10 MB)' : 'Прикрепить ТЗ или макет (до 10 МБ)';
-            fileLabel.classList.remove('file-selected');
-          }
         } else {
           showToast(result.message || 'Произошла ошибка при отправке. Попробуйте еще раз.', 'error');
         }
