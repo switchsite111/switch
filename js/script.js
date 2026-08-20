@@ -75,8 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function animateDotGrid() {
     ctx.clearRect(0, 0, width, height);
     const isLight = document.body.classList.contains('light-theme');
-    const pColor = isLight ? '0, 0, 0' : '255, 255, 255';
-    const baseAlpha = isLight ? 0.05 : 0.15;
+    const pColor = isLight ? '15, 23, 42' : '255, 255, 255';
+    const baseAlpha = isLight ? 0.16 : 0.15;
 
     for (let x = gridSpacing / 2; x < width; x += gridSpacing) {
       for (let y = gridSpacing / 2; y < height; y += gridSpacing) {
@@ -86,11 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const dist = Math.sqrt(dx * dx + dy * dy);
         
         let alpha = baseAlpha;
-        let radius = isLight ? 1.1 : 1.25;
+        let radius = isLight ? 1.3 : 1.25;
 
         if (dist < mouse.radius) {
           const factor = (1 - dist / mouse.radius);
-          alpha += factor * (isLight ? 0.12 : 0.35);
+          alpha += factor * (isLight ? 0.35 : 0.35);
           radius += factor * 1.2;
         }
 

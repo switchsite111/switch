@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SWITCH — Ошибка</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════
+       SWITCH ERROR PAGE — CYBER KINETIC DESIGN
+       ═══════════════════════════════════════════════════════════════════ */
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #000000;
+      --surface: #0a0a0b;
+      --border: #1a1a1f;
+      --text: #ffffff;
+      --text-muted: #71717a;
+      --accent: #ffffff;
+      --glow: rgba(255, 255, 255, 0.06);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Unbounded', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Анимированная сетка на фоне ─── */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(60px, 60px); }
+    }
+
+    /* ─── Сканирующая линия ─── */
+    .scanline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      z-index: 1;
+      animation: scanDown 4s ease-in-out infinite;
+    }
+
+    @keyframes scanDown {
+      0% { top: -2px; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* ─── Частицы (кибер-эффект) ─── */
+    .particles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      animation: particleFloat linear infinite;
+    }
+
+    @keyframes particleFloat {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* ─── Главный контейнер ─── */
+    .error-container {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ─── Логотип SWITCH ─── */
+    .switch-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 3rem;
+      text-decoration: none;
+      color: var(--text);
+      animation: logoAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes logoAppear {
+      from { opacity: 0; transform: translateY(-20px) scale(0.9); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .logo-icon {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg {
+      width: 48px;
+      height: 48px;
+      filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1));
+    }
+
+    /* Пульсирующее свечение вокруг иконки */
+    .logo-icon::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.06), transparent 70%);
+      animation: logoPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    /* ─── Код ошибки ─── */
+    .error-code-wrapper {
+      position: relative;
+      margin-bottom: 1.5rem;
+      animation: codeAppear 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    }
+
+    @keyframes codeAppear {
+      from { opacity: 0; transform: scale(0.5); filter: blur(20px); }
+      to { opacity: 1; transform: scale(1); filter: blur(0); }
+    }
+
+    .error-code {
+      font-size: clamp(6rem, 18vw, 12rem);
+      font-weight: 900;
+      line-height: 1;
+      color: transparent;
+      background: linear-gradient(180deg, #ffffff 0%, #3f3f46 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      position: relative;
+      user-select: none;
+    }
+
+    /* Глитч-эффект */
+    .error-code::before,
+    .error-code::after {
+      content: attr(data-code);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, #ffffff 0%, #3f3f46 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .error-code::before {
+      animation: glitch1 3s infinite;
+      clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+    }
+
+    .error-code::after {
+      animation: glitch2 3s infinite;
+      clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+    }
+
+    @keyframes glitch1 {
+      0%, 90%, 100% { transform: translate(0); }
+      92% { transform: translate(-3px, -1px); }
+      94% { transform: translate(3px, 1px); }
+      96% { transform: translate(-2px, 0); }
+    }
+
+    @keyframes glitch2 {
+      0%, 90%, 100% { transform: translate(0); }
+      91% { transform: translate(3px, 1px); }
+      93% { transform: translate(-3px, -1px); }
+      95% { transform: translate(2px, 0); }
+    }
+
+    /* ─── Заголовок ошибки ─── */
+    .error-title {
+      font-size: clamp(1.1rem, 3vw, 1.6rem);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+    }
+
+    .error-description {
+      font-size: clamp(0.75rem, 2vw, 0.95rem);
+      font-weight: 300;
+      color: var(--text-muted);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Кнопки ─── */
+    .error-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+    }
+
+    .btn-error {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 12px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-error::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .btn-primary-err {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .btn-primary-err::before {
+      background: linear-gradient(135deg, #e2e8f0, #ffffff);
+    }
+
+    .btn-primary-err:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-primary-err:hover::before {
+      opacity: 1;
+    }
+
+    .btn-secondary-err {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary-err:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #3f3f46;
+      transform: translateY(-2px);
+    }
+
+    /* ─── Статус-бар снизу ─── */
+    .status-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.6rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 20;
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both;
+    }
+
+    .status-bar .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: statusBlink 2s ease-in-out infinite;
+    }
+
+    .status-dot.red { background: #ef4444; }
+    .status-dot.yellow { background: #eab308; }
+    .status-dot.green { background: #22c55e; }
+
+    @keyframes statusBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .status-left {
+      display: flex;
+      align-items: center;
+    }
+
+    /* ─── Декоративные элементы ─── */
+    .corner-decor {
+      position: fixed;
+      width: 60px;
+      height: 60px;
+      z-index: 5;
+      opacity: 0.15;
+    }
+
+    .corner-decor.tl {
+      top: 24px;
+      left: 24px;
+      border-top: 1px solid var(--text);
+      border-left: 1px solid var(--text);
+    }
+
+    .corner-decor.tr {
+      top: 24px;
+      right: 24px;
+      border-top: 1px solid var(--text);
+      border-right: 1px solid var(--text);
+    }
+
+    .corner-decor.bl {
+      bottom: 50px;
+      left: 24px;
+      border-bottom: 1px solid var(--text);
+      border-left: 1px solid var(--text);
+    }
+
+    .corner-decor.br {
+      bottom: 50px;
+      right: 24px;
+      border-bottom: 1px solid var(--text);
+      border-right: 1px solid var(--text);
+    }
+
+    /* ─── Shield-иконка для 403 ─── */
+    .shield-icon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 1.5rem;
+      color: var(--text-muted);
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+      opacity: 0.4;
+    }
+
+    /* ─── Адаптивность ─── */
+    @media (max-width: 600px) {
+      .error-actions {
+        flex-direction: column;
+        width: 100%;
+        max-width: 280px;
+      }
+      .btn-error {
+        width: 100%;
+        justify-content: center;
+      }
+      .status-bar {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+        padding: 10px 16px;
+      }
+      .corner-decor {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Фоновые эффекты -->
+  <div class="grid-bg"></div>
+  <div class="scanline"></div>
+  <div class="particles" id="particles"></div>
+
+  <!-- Угловые декорации -->
+  <div class="corner-decor tl"></div>
+  <div class="corner-decor tr"></div>
+  <div class="corner-decor bl"></div>
+  <div class="corner-decor br"></div>
+
+  <!-- Главный контент -->
+  <div class="error-container">
+
+    <!-- Логотип SWITCH -->
+    <a href="index.html" class="switch-logo" id="error-logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect class="joycon-left" x="3" y="2" width="7.5" height="20" rx="3.75"
+            fill="currentColor" fill-opacity="0.08" />
+          <circle cx="6.75" cy="7" r="1.3" fill="currentColor" />
+          <rect class="joycon-right" x="13.5" y="2" width="7.5" height="20" rx="3.75"
+            fill="currentColor" fill-opacity="0.08" />
+          <circle cx="17.25" cy="17" r="1.3" fill="currentColor" />
+        </svg>
+      </div>
+      <span class="logo-text">SWITCH</span>
+    </a>
+
+    <!-- Shield Icon (для 403) -->
+    <svg id="shield-svg" class="shield-icon" style="display:none;" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <line x1="9" y1="9" x2="15" y2="15" />
+      <line x1="15" y1="9" x2="9" y2="15" />
+    </svg>
+
+    <!-- Код ошибки -->
+    <div class="error-code-wrapper">
+      <div class="error-code" id="error-code" data-code="404">404</div>
+    </div>
+
+    <!-- Описание -->
+    <h1 class="error-title" id="error-title">Страница не найдена</h1>
+    <p class="error-description" id="error-description">
+      Запрашиваемая страница не существует или была перемещена. Проверьте правильность URL-адреса или вернитесь на главную.
+    </p>
+
+    <!-- Кнопки -->
+    <div class="error-actions">
+      <a href="index.html" class="btn-error btn-primary-err" id="btn-home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        На главную
+      </a>
+      <button class="btn-error btn-secondary-err" id="btn-back" onclick="history.back()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Назад
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Статус-бар -->
+  <div class="status-bar">
+    <div class="status-left">
+      <span class="status-dot red" id="status-dot"></span>
+      <span id="status-text">ERROR</span>
+    </div>
+    <div>
+      <span id="status-session"></span>
+    </div>
+    <div>
+      SWITCH Cyber Kinetic Shield v2.0
+    </div>
+  </div>
+
+  <script>
+    /* ═══════════════════════════════════════════════════════════════════
+       ERROR PAGE LOGIC — Определение типа ошибки и отображение
+       ═══════════════════════════════════════════════════════════════════ */
+
+    (function () {
+      'use strict';
+
+      const errors = {
+        400: {
+          title: 'Некорректный запрос',
+          description: 'Сервер не смог обработать ваш запрос. Попробуйте изменить параметры или вернитесь на главную страницу.',
+          dot: 'yellow',
+          status: 'BAD REQUEST',
+        },
+        403: {
+          title: 'Доступ запрещён',
+          description: 'У вас нет разрешения на доступ к этому ресурсу. Если вы считаете это ошибкой, свяжитесь с нами.',
+          dot: 'red',
+          status: 'FORBIDDEN',
+          showShield: true,
+        },
+        404: {
+          title: 'Страница не найдена',
+          description: 'Запрашиваемая страница не существует или была перемещена. Проверьте URL-адрес или вернитесь на главную.',
+          dot: 'yellow',
+          status: 'NOT FOUND',
+        },
+        408: {
+          title: 'Время ожидания истекло',
+          description: 'Сервер не дождался ответа. Проверьте ваше интернет-соединение и попробуйте ещё раз.',
+          dot: 'yellow',
+          status: 'TIMEOUT',
+        },
+        429: {
+          title: 'Слишком много запросов',
+          description: 'Вы отправили слишком много запросов. Подождите немного и попробуйте снова.',
+          dot: 'red',
+          status: 'RATE LIMITED',
+        },
+        500: {
+          title: 'Внутренняя ошибка сервера',
+          description: 'Что-то пошло не так на нашей стороне. Мы уже работаем над исправлением. Попробуйте позже.',
+          dot: 'red',
+          status: 'INTERNAL ERROR',
+        },
+        502: {
+          title: 'Ошибка шлюза',
+          description: 'Сервер получил недопустимый ответ. Попробуйте обновить страницу через несколько секунд.',
+          dot: 'red',
+          status: 'BAD GATEWAY',
+        },
+        503: {
+          title: 'Сервис недоступен',
+          description: 'Сайт временно недоступен из-за технических работ или перегрузки. Мы скоро вернёмся.',
+          dot: 'yellow',
+          status: 'UNAVAILABLE',
+        },
+      };
+
+      // Дополнительные описания для reason
+      const reasons = {
+        security: 'Обнаружена подозрительная активность. Ваш доступ временно ограничен системой безопасности SWITCH Shield.',
+        xss: 'Обнаружена попытка XSS-атаки. Запрос заблокирован системой защиты.',
+        sqli: 'Обнаружена попытка SQL-инъекции. Запрос заблокирован системой защиты.',
+        traversal: 'Обнаружена попытка обхода каталогов. Запрос заблокирован системой защиты.',
+        bot: 'Автоматический доступ к ресурсу заблокирован. Подтвердите, что вы не робот.',
+      };
+
+      // Парсинг параметров
+      const params = new URLSearchParams(window.location.search);
+      const code = parseInt(params.get('code')) || 404;
+      const reason = params.get('reason') || '';
+
+      const errorData = errors[code] || errors[404];
+
+      // Применяем данные
+      const codeEl = document.getElementById('error-code');
+      codeEl.textContent = code;
+      codeEl.setAttribute('data-code', code);
+
+      document.getElementById('error-title').textContent = errorData.title;
+      document.getElementById('error-description').textContent =
+        reasons[reason] || errorData.description;
+
+      document.title = `SWITCH — ${code} ${errorData.title}`;
+
+      // Статус-бар
+      document.getElementById('status-dot').className = 'status-dot ' + errorData.dot;
+      document.getElementById('status-text').textContent = `${code} ${errorData.status}`;
+
+      // Сессия
+      const sessionId = Date.now().toString(36) + Math.random().toString(36).substring(2, 6);
+      document.getElementById('status-session').textContent = `SID: ${sessionId.toUpperCase()}`;
+
+      // Shield иконка для 403
+      if (errorData.showShield) {
+        document.getElementById('shield-svg').style.display = 'block';
+      }
+
+      // Генерация частиц
+      const particlesContainer = document.getElementById('particles');
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDuration = (6 + Math.random() * 8) + 's';
+        particle.style.animationDelay = Math.random() * 5 + 's';
+        particle.style.width = (1 + Math.random() * 2) + 'px';
+        particle.style.height = particle.style.width;
+        particlesContainer.appendChild(particle);
+      }
+
+    })();
+  </script>
+
+</body>
+
+</html>
