@@ -31,52 +31,6 @@
       return id;
     }
 
-    getSettings() {
-      const defaultSettings = {
-        pin: '1337',
-        authenticated: false
-      };
-      try {
-        const stored = localStorage.getItem(STORAGE_KEY_SETTINGS);
-        return stored ? Object.assign({}, defaultSettings, JSON.parse(stored)) : defaultSettings;
-      } catch (e) {
-        return defaultSettings;
-      }
-    }
-
-    saveSettings(settings) {
-      try {
-        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings));
-      } catch (e) {
-        console.warn('Analytics settings save error:', e);
-      }
-    }
-
-    verifyPin(inputPin) {
-      const settings = this.getSettings();
-      if (String(inputPin).trim() === String(settings.pin)) {
-        sessionStorage.setItem('switch_admin_auth', 'true');
-        return true;
-      }
-      return false;
-    }
-
-    isAuthenticated() {
-      return sessionStorage.getItem('switch_admin_auth') === 'true';
-    }
-
-    logoutAdmin() {
-      sessionStorage.removeItem('switch_admin_auth');
-    }
-
-    changePin(newPin) {
-      if (!newPin || newPin.trim().length < 4) return false;
-      const settings = this.getSettings();
-      settings.pin = newPin.trim();
-      this.saveSettings(settings);
-      return true;
-    }
-
     detectDevice() {
       const ua = navigator.userAgent;
       if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
