@@ -1566,7 +1566,11 @@ body.light-theme .btn-primary * {
 .detail-icon svg {
   width: 20px;
   height: 20px;
-  fill: currentColor;
+}
+
+.detail-icon svg[fill="none"] {
+  fill: none !important;
+  stroke: currentColor;
 }
 
 .detail-label {
