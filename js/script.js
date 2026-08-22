@@ -664,5 +664,90 @@ document.addEventListener('DOMContentLoaded', () => {
   runCodeStream('code-stream-left', leftSnippets);
   runCodeStream('code-stream-right', rightSnippets);
 
+  // 10. Portfolio Full Resolution Image Lightbox Modal
+  const lightbox = document.getElementById('portfolio-lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  const lightboxCloseBtn = document.getElementById('lightbox-close-btn');
+
+  function openPortfolioLightbox(imgSrc, titleText) {
+    if (!lightbox || !lightboxImg) return;
+    lightboxImg.src = imgSrc;
+    if (lightboxCaption) {
+      lightboxCaption.textContent = titleText || '';
+    }
+    lightbox.classList.add('active');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePortfolioLightbox() {
+    if (!lightbox) return;
+    lightbox.classList.remove('active');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      if (lightboxImg) lightboxImg.src = '';
+    }, 300);
+  }
+
+  document.querySelectorAll('.portfolio-card[data-full-img]').forEach(card => {
+    card.addEventListener('click', (e) => {
+      // Don't trigger if clicked on inner link
+      if (e.target.closest('a')) return;
+      const fullImg = card.getAttribute('data-full-img');
+      const title = card.getAttribute('data-title');
+      if (fullImg) {
+        openPortfolioLightbox(fullImg, title);
+      }
+    });
+  });
+
+  if (lightboxCloseBtn) {
+    lightboxCloseBtn.addEventListener('click', closePortfolioLightbox);
+  }
+
+  if (lightbox) {
+    lightbox.addEventListener('click', (e) => {
+      if (e.target.classList.contains('lightbox-backdrop') || e.target === lightbox) {
+        closePortfolioLightbox();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox && lightbox.classList.contains('active')) {
+      closePortfolioLightbox();
+    }
+  });
+
+  // 11. Phone Input Strict Filtering (Only digits and '+' allowed)
+  const phoneInput = document.getElementById('form-phone');
+  if (phoneInput) {
+    function sanitizePhoneInput(el) {
+      // Keep only digits and '+'
+      let val = el.value.replace(/[^\d+]/g, '');
+      // Ensure '+' can only be at the very beginning
+      if (val.includes('+')) {
+        val = '+' + val.replace(/\+/g, '');
+      }
+      el.value = val;
+    }
+
+    phoneInput.addEventListener('input', function () {
+      sanitizePhoneInput(this);
+    });
+
+    phoneInput.addEventListener('beforeinput', function (e) {
+      if (e.data && /[^\d+]/.test(e.data)) {
+        e.preventDefault();
+      }
+    });
+
+    phoneInput.addEventListener('paste', function () {
+      setTimeout(() => sanitizePhoneInput(this), 0);
+    });
+  }
+
 });
 
