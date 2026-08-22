@@ -171,8 +171,6 @@
           <a href="#portfolio" class="nav-link" data-ru="Кейсы" data-en="Cases">Кейсы</a>
           <a href="#process" class="nav-link" data-ru="Этапы" data-en="Process">Этапы</a>
           <a href="#faq" class="nav-link" data-ru="FAQ" data-en="FAQ">FAQ</a>
-          <a href="#contact" class="btn btn-secondary nav-mobile-btn" data-ru="Связаться"
-            data-en="Contact Us">Связаться</a>
         </nav>
 
         <div class="nav-actions">
@@ -184,7 +182,7 @@
           <button id="lang-toggle-btn" class="icon-btn" title="Switch language">
             RU | EN
           </button>
-          <a href="#contact" class="btn btn-primary" data-ru="Заказать сайт" data-en="Order Website">Заказать сайт</a>
+          <a href="#contact" class="btn btn-primary" data-ru="Связаться" data-en="Contact Us">Связаться</a>
           <button class="mobile-toggle" aria-label="Открыть меню" aria-expanded="false">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -198,7 +196,7 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="hero">
+  <section id="about" class="hero">
     <div class="container">
       <div class="hero-layout">
         <!-- Left Code Stream Card -->
@@ -268,7 +266,7 @@
 
   <!-- Services Section -->
   <section id="services" class="services">
-    <div class="container">
+    <div class="container" style="max-width: 1440px;">
       <div class="center-text reveal-fade-up">
         <h2 class="section-title typewriter-text" data-typewriter="С чем мы можем помочь"
           data-ru="С чем мы можем помочь" data-en="How We Can Help">С чем мы можем помочь</h2>
@@ -283,15 +281,9 @@
           <div>
             <h3 class="service-title" data-ru="Лендинг" data-en="Landing Page">Лендинг</h3>
             <p class="service-desc"
-              data-ru="Когда нужно быстро запуститься и собирать заявки. Одна страница, фокус на конверсии."
-              data-en="When you need to launch fast and collect leads. One page, focused on conversion.">Когда нужно
-              быстро запуститься и собирать заявки. Одна страница, фокус на конверсии.</p>
+              data-ru="Когда нужно быстро запуститься и собирать заявки. Одна страница, сфокусированная на высокой конверсии, полной адаптивности и прямой связи с вашей целевой аудиторией."
+              data-en="When you need to launch fast and collect leads. One page focused on high conversion, full mobile responsiveness, and direct lead generation.">Когда нужно быстро запуститься и собирать заявки. Одна страница, сфокусированная на высокой конверсии, полной адаптивности и прямой связи с вашей целевой аудиторией.</p>
           </div>
-          <ul class="service-features">
-            <li data-ru="Минималистичный премиум UI/UX" data-en="Minimalist Premium UI/UX"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Минималистичный премиум UI/UX</li>
-            <li data-ru="Полная адаптивность под телефоны" data-en="Fully Mobile Responsive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Полная адаптивность под телефоны</li>
-            <li data-ru="Интеграция формы на ваш Email" data-en="Email Form Integration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Интеграция формы на ваш Email</li>
-          </ul>
         </div>
 
         <!-- Service 2 -->
@@ -299,31 +291,29 @@
           <div>
             <h3 class="service-title" data-ru="Сайт компании" data-en="Business Website">Сайт компании</h3>
             <p class="service-desc"
-              data-ru="Для тех, кому важно выглядеть солидно. Несколько страниц, чистый код, быстрая загрузка."
-              data-en="For those who want to look professional. Multiple pages, clean code, fast load.">Для тех, кому
-              важно выглядеть солидно. Несколько страниц, чистый код, быстрая загрузка.</p>
+              data-ru="Многостраничный веб-ресурс для подробного представления компании, каталога услуг и преимуществ. Удобная структура, прозрачная навигация и базовая SEO-подготовка."
+              data-en="Multi-page web resource for detailed presentation of your company, services catalog, and advantages. Convenient structure, clean navigation, and base SEO.">Многостраничный веб-ресурс для подробного представления компании, каталога услуг и преимуществ. Удобная структура, прозрачная навигация и базовая SEO-подготовка.</p>
           </div>
-          <ul class="service-features">
-            <li data-ru="Элегантный стиль и типографика" data-en="Elegant Style & Typography"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Элегантный стиль и типографика</li>
-            <li data-ru="Молниеносная скорость загрузки" data-en="Lightning Fast Load Speed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Молниеносная скорость загрузки</li>
-            <li data-ru="Базовая SEO-оптимизация" data-en="Base SEO Optimization"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Базовая SEO-оптимизация</li>
-          </ul>
         </div>
 
         <!-- Service 3 -->
+        <div class="service-card reveal-scale" data-service-name="Интернет-магазин" style="cursor: pointer;">
+          <div>
+            <h3 class="service-title" data-ru="Интернет-магазин" data-en="E-Commerce Store">Интернет-магазин</h3>
+            <p class="service-desc"
+              data-ru="Полноценная онлайн-витрина для продажи товаров с удобным каталогом, фильтрацией, функциональной корзиной и оперативным приёмом заказов."
+              data-en="Full-featured online storefront for selling products with a convenient catalog, filtering, functional shopping cart, and quick order intake.">Полноценная онлайн-витрина для продажи товаров с удобным каталогом, фильтрацией, функциональной корзиной и оперативным приёмом заказов.</p>
+          </div>
+        </div>
+
+        <!-- Service 4 -->
         <div class="service-card reveal-slide-right" data-service-name="Индивидуальный проект" style="cursor: pointer;">
           <div>
             <h3 class="service-title" data-ru="Нестандартный проект" data-en="Custom Project">Нестандартный проект</h3>
             <p class="service-desc"
-              data-ru="Калькуляторы, дашборды, интерактивные страницы — всё, что выходит за рамки шаблона."
-              data-en="Calculators, dashboards, interactive pages — anything beyond a template.">Калькуляторы, дашборды,
-              интерактивные страницы — всё, что выходит за рамки шаблона.</p>
+              data-ru="Сложная веб-разработка, интерактивные сервисы и личные кабинеты. Реализуем нестандартную логику, высшую производительность и уникальную архитектуру под ваши задачи."
+              data-en="Complex web development, interactive services, and user portals. We build custom logic, high performance, and unique architecture for your specific goals.">Сложная веб-разработка, интерактивные сервисы и личные кабинеты. Реализуем нестандартную логику, высшую производительность и уникальную архитектуру под ваши задачи.</p>
           </div>
-          <ul class="service-features">
-            <li data-ru="Продуманная структура данных" data-en="Thoughtful Data Architecture"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Продуманная структура данных</li>
-            <li data-ru="Интерактивность на Vanilla JS" data-en="Vanilla JS Interactivity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Интерактивность на Vanilla JS</li>
-            <li data-ru="Поддержка после запуска" data-en="Post-Launch Support"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Поддержка после запуска</li>
-          </ul>
         </div>
       </div>
     </div>
@@ -345,14 +335,29 @@
           <div>
             <div class="calc-group-title" data-ru="Тип сайта:" data-en="Website Type:">Тип сайта:</div>
             <div class="calc-pills" id="calc-types">
-              <div class="calc-pill active" data-price="9900" data-days="3" data-ru="Лендинг пейдж"
-                data-en="Landing Page">Лендинг пейдж</div>
-              <div class="calc-pill" data-price="19900" data-days="5" data-ru="Корпоративный сайт"
-                data-en="Corporate Site">Корпоративный сайт</div>
-              <div class="calc-pill" data-price="34900" data-days="8" data-ru="Интернет-магазин"
-                data-en="E-Commerce Store">Интернет-магазин</div>
-              <div class="calc-pill" data-price="49900" data-days="12" data-ru="Индивидуальный проект"
-                data-en="Custom Solution">Индивидуальный проект</div>
+              <div class="calc-pill active" data-price="9900" data-time-ru="2–4 дня" data-time-en="2–4 days"
+                data-desc-ru="Лендинг пейдж (Landing Page) — одностраничный веб-сайт, сфокусированный на максимальной конверсии посетителей в заявки и быстром запуске бизнеса."
+                data-desc-en="Landing Page — a single-page website focused on maximum visitor conversion into leads and fast business launch."
+                data-ru="Лендинг пейдж" data-en="Landing Page">Лендинг пейдж</div>
+              <div class="calc-pill" data-price="19900" data-time-ru="4–8 дней" data-time-en="4–8 days"
+                data-desc-ru="Корпоративный сайт — многостраничный веб-ресурс для подробного представления компании, каталога услуг, репутации и контактов."
+                data-desc-en="Corporate Site — a multi-page web resource for detailed presentation of the company, services catalog, reputation, and contacts."
+                data-ru="Корпоративный сайт" data-en="Corporate Site">Корпоративный сайт</div>
+              <div class="calc-pill" data-price="34900" data-time-ru="4–8 дней" data-time-en="4–8 days"
+                data-desc-ru="Интернет-магазин — полнофункциональная торговая площадка с каталогом товаров, фильтрами, корзиной и удобным приёмом заказов."
+                data-desc-en="E-Commerce Store — a full-featured trading platform with product catalog, filters, cart, and convenient order processing."
+                data-ru="Интернет-магазин" data-en="E-Commerce Store">Интернет-магазин</div>
+              <div class="calc-pill" data-price="49900" data-time-ru="Индивидуально (?)" data-time-en="Custom (?)"
+                data-desc-ru="Индивидуальный проект — нестандартная веб-разработка со сложной логикой, сервисами, уникальной архитектурой и личными кабинетами."
+                data-desc-en="Custom Project — non-standard web development with complex logic, custom services, unique architecture, and user portals."
+                data-ru="Индивидуальный проект" data-en="Custom Solution">Индивидуальный проект</div>
+            </div>
+            
+            <!-- Type Description Box -->
+            <div id="calc-type-desc" class="calc-type-desc"
+              data-ru="Лендинг пейдж (Landing Page) — одностраничный веб-сайт, сфокусированный на максимальной конверсии посетителей в заявки и быстром запуске бизнеса."
+              data-en="Landing Page — a single-page website focused on maximum visitor conversion into leads and fast business launch.">
+              Лендинг пейдж (Landing Page) — одностраничный веб-сайт, сфокусированный на максимальной конверсии посетителей в заявки и быстром запуске бизнеса.
             </div>
           </div>
         </div>
@@ -362,8 +367,8 @@
             <span class="calc-price-label" data-ru="Предварительный бюджет:" data-en="Estimated Budget:">Предварительный
               бюджет:</span>
             <div class="calc-price-val" id="calc-price-val">9 900 ₽</div>
-            <div class="calc-time" id="calc-time-val" data-ru="Примерный срок: 3-5 дней"
-              data-en="Estimated Time: 3-5 days">Примерный срок: 3-5 дней</div>
+            <div class="calc-time" id="calc-time-val" data-ru="Примерный срок: 2–4 дня"
+              data-en="Estimated Time: 2–4 days">Примерный срок: 2–4 дня</div>
           </div>
           <button class="btn btn-primary" id="calc-apply-btn" style="width: 100%;" data-ru="Перенести в форму заявки"
             data-en="Apply to Request Form">
@@ -402,9 +407,9 @@
                 Премиальный веб-сайт для студии автовинила, защитных плёнок и детейлинга премиум-класса.
               </p>
             </div>
-            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center;">
+            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
               <span style="font-size: 0.8rem; color: var(--text-dim);" data-ru="Разработка под ключ" data-en="Turnkey Development">Разработка под ключ</span>
-              <span style="font-size: 0.8rem; font-weight: 700; color: #ffffff;" data-ru="Смотреть фото ↗" data-en="View Photo ↗">Смотреть фото ↗</span>
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-main);" data-ru="Смотреть фото ↗" data-en="View Photo ↗">Смотреть фото ↗</span>
             </div>
           </div>
         </div>
@@ -424,26 +429,24 @@
                 Современный корпоративный веб-портал с фоновыми интерактивами, каталогом услуг и разделом карьеры.
               </p>
             </div>
-            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center;">
+            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
               <span style="font-size: 0.8rem; color: var(--text-dim);" data-ru="Корпоративный портал" data-en="Corporate Portal">Корпоративный портал</span>
-              <span style="font-size: 0.8rem; font-weight: 700; color: #ffffff;" data-ru="Смотреть фото ↗" data-en="View Photo ↗">Смотреть фото ↗</span>
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-main);" data-ru="Смотреть фото ↗" data-en="View Photo ↗">Смотреть фото ↗</span>
             </div>
           </div>
         </div>
 
         <!-- Case 3: Teaser / Future Client Spot (No Switch Logo) -->
-        <div class="portfolio-card reveal-flip" style="border: 2px dashed var(--border-color-glow); background: rgba(255, 255, 255, 0.02);">
-          <div class="portfolio-img-wrapper" style="aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.015);">
-            <div style="text-align: center; padding: 24px;">
-              <div style="width: 64px; height: 64px; border-radius: 50%; border: 2px dashed rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; color: rgba(255, 255, 255, 0.75); font-size: 2rem; font-weight: 300;">
-                +
-              </div>
-              <div style="font-size: 0.95rem; font-weight: 700; color: #ffffff; letter-spacing: 0.05em; text-transform: uppercase;" data-ru="Здесь может быть ваш проект" data-en="Your Project Here">Здесь может быть ваш проект</div>
+        <div class="portfolio-card portfolio-teaser-card reveal-flip">
+          <div class="portfolio-img-wrapper portfolio-teaser-wrapper">
+            <div class="portfolio-teaser-content">
+              <div class="portfolio-teaser-plus">+</div>
+              <div class="portfolio-teaser-title" data-ru="Здесь может быть ваш проект" data-en="Your Project Here">Здесь может быть ваш проект</div>
             </div>
           </div>
           <div class="portfolio-info">
             <div>
-              <div class="portfolio-tag" style="color: #ffffff; background: rgba(255, 255, 255, 0.12); display: inline-block; padding: 4px 12px; border-radius: 20px; margin-bottom: 10px;" data-ru="Свободное место" data-en="Available Spot">Свободное место</div>
+              <div class="portfolio-tag portfolio-teaser-tag" data-ru="Свободное место" data-en="Available Spot">Свободное место</div>
               <h3 class="portfolio-card-title" data-ru="Ваше место в кейсах" data-en="Your Spot in Cases">Ваше место в кейсах</h3>
               <p class="portfolio-card-desc" data-ru="Хотите стильный и конверсионный сайт для вашего бизнеса? Начните сотрудничество прямо сейчас!" data-en="Want a stylish and high-converting website for your business? Start collaboration right now!">
                 Хотите стильный и конверсионный сайт для вашего бизнеса? Начните сотрудничество прямо сейчас!
@@ -451,6 +454,7 @@
             </div>
             <a href="#contact" class="btn btn-primary" style="margin-top: 20px; width: 100%; text-align: center;" data-ru="Оставить заявку" data-en="Submit Request">Оставить заявку</a>
           </div>
+        </div>
         </div>
       </div>
     </div>
@@ -516,8 +520,8 @@
       <div class="faq-container reveal">
         <div class="faq-item">
           <div class="faq-header">
-            <h4 data-ru="Чем вы отличаетесь от фрилансеров?" data-en="How are you different from freelancers?">Чем вы
-              отличаетесь от фрилансеров?</h4>
+            <h4 data-ru="Чем вы отличаетесь от других?" data-en="How are you different from others?">Чем вы
+              отличаетесь от других?</h4>
             <div class="faq-icon">+</div>
           </div>
           <div class="faq-body">
@@ -626,9 +630,9 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label" for="form-phone" data-ru="Телефон / Telegram"
-                  data-en="Phone / Telegram">Телефон / Telegram</label>
-                <input type="tel" id="form-phone" name="phone" class="form-input" placeholder="+79990000000" inputmode="tel">
+                <label class="form-label" for="form-phone" data-ru="Телефон *"
+                  data-en="Phone *">Телефон *</label>
+                <input type="tel" id="form-phone" name="phone" class="form-input" placeholder="+79990000000" inputmode="tel" required>
               </div>
               <div class="form-group">
                 <label class="form-label" for="form-service" data-ru="Тип Услуги" data-en="Service Type">Тип

@@ -687,270 +687,270 @@
             self.recordViolation('FORM_CSRF', 'CSRF-токен формы изменён');
           }
         });
-        });
       });
+    });
 
-      this.log('🔒 Form Protection: активен');
-    },
+  this.log('🔒 Form Protection: активен');
+},
 
-    /* ═══════════════════════════════════════════════════════════════════
-       МОДУЛЬ 10: LINK PROTECTION (anti-phishing, anti-redirect)
-       ═══════════════════════════════════════════════════════════════════ */
-    linkProtection() {
-      const self = this;
-      const trustedDomains = [
-        'switch-studio.ru',
-        'google.com',
-        'yandex.ru',
-        'fonts.googleapis.com',
-        'fonts.gstatic.com',
-        'formspree.io',
-        't.me',
-        'vk.com',
-        'wa.me',
-        'whatsapp.com',
-      ];
+  /* ═══════════════════════════════════════════════════════════════════
+     МОДУЛЬ 10: LINK PROTECTION (anti-phishing, anti-redirect)
+     ═══════════════════════════════════════════════════════════════════ */
+  linkProtection() {
+  const self = this;
+  const trustedDomains = [
+    'switch-studio.ru',
+    'google.com',
+    'yandex.ru',
+    'fonts.googleapis.com',
+    'fonts.gstatic.com',
+    'formspree.io',
+    't.me',
+    'vk.com',
+    'wa.me',
+    'whatsapp.com',
+  ];
 
-      document.addEventListener('click', (e) => {
-        const link = e.target.closest('a');
-        if (!link) return;
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (!link) return;
 
-        const href = link.getAttribute('href');
-        if (!href || href.startsWith('#') || href.startsWith('/') || href.startsWith('./') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('/') || href.startsWith('./') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
 
-        try {
-          const url = new URL(href, window.location.origin);
+    try {
+      const url = new URL(href, window.location.origin);
 
-          // Проверка javascript: протокола
-          if (url.protocol === 'javascript:') {
-            e.preventDefault();
-            self.recordViolation('LINK_JAVASCRIPT', 'javascript: ссылка заблокирована');
-            return;
-          }
-
-          // Проверка data: протокола
-          if (url.protocol === 'data:') {
-            e.preventDefault();
-            self.recordViolation('LINK_DATA', 'data: ссылка заблокирована');
-            return;
-          }
-
-          // Проверка внешних ссылок — добавляем rel=noopener
-          if (url.hostname !== window.location.hostname) {
-            link.setAttribute('rel', 'noopener noreferrer');
-            link.setAttribute('target', '_blank');
-          }
-        } catch (err) {
-          // Невалидный URL — блокируем
-          e.preventDefault();
-          self.recordViolation('LINK_INVALID', `Невалидный URL: ${href}`);
-        }
-      }, true);
-
-      this.log('🔒 Link Protection: активен');
-    },
-
-    /* ═══════════════════════════════════════════════════════════════════
-       МОДУЛЬ 11: DOM PROTECTION (Mutation Security)
-       ═══════════════════════════════════════════════════════════════════ */
-    domProtection() {
-      const self = this;
-
-      // Белый список разрешённых доменов для iframe
-      const allowedIframeDomains = ['youtube.com', 'youtu.be', 'google.com', 'vimeo.com', 'vk.com'];
-      const dangerousTags = ['object', 'embed', 'applet', 'base'];
-
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === 1) {
-              const tag = node.tagName.toLowerCase();
-              if (tag === 'iframe') {
-                const src = node.getAttribute('src') || '';
-                const isAllowed = allowedIframeDomains.some(domain => src.includes(domain));
-                if (!isAllowed) {
-                  node.remove();
-                  self.recordViolation('DOM_DANGEROUS_TAG', `<iframe src="${src}"> удалён из DOM (не в белом списке)`);
-                }
-              } else if (dangerousTags.includes(tag)) {
-                node.remove();
-                self.recordViolation('DOM_DANGEROUS_TAG', `<${tag}> удалён из DOM`);
-              }
-            }
-          });
-        });
-      });
-
-      observer.observe(document.documentElement, {
-        childList: true,
-        subtree: true,
-      });
-
-      // Защита критических элементов от удаления
-      const protectSelectors = ['head', 'body', '.header', '#bg-particles-canvas'];
-      const protectObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          mutation.removedNodes.forEach((node) => {
-            if (node.nodeType === 1) {
-              for (const sel of protectSelectors) {
-                if (node.matches && node.matches(sel)) {
-                  self.recordViolation('DOM_CRITICAL_REMOVE', `Попытка удаления критического элемента: ${sel}`);
-                }
-              }
-            }
-          });
-        });
-      });
-
-      protectObserver.observe(document.documentElement, {
-        childList: true,
-        subtree: true,
-      });
-
-      this.log('🔒 DOM Protection: активен');
-    },
-
-    /* ═══════════════════════════════════════════════════════════════════
-       МОДУЛЬ 12: URL PROTECTION
-       ═══════════════════════════════════════════════════════════════════ */
-    urlProtection() {
-      const url = window.location.href;
-      const search = window.location.search;
-      const hash = window.location.hash;
-
-      // Проверка URL на XSS
-      if (this.detectXSS(decodeURIComponent(url))) {
-        this.recordViolation('URL_XSS', 'XSS паттерн в URL');
-        window.location.href = 'error.html?code=400&reason=xss';
+      // Проверка javascript: протокола
+      if (url.protocol === 'javascript:') {
+        e.preventDefault();
+        self.recordViolation('LINK_JAVASCRIPT', 'javascript: ссылка заблокирована');
         return;
       }
 
-      // Проверка path traversal
-      for (const pattern of this.config.pathTraversalPatterns) {
-        pattern.lastIndex = 0;
-        if (pattern.test(url)) {
-          this.recordViolation('URL_TRAVERSAL', `Path traversal: ${url}`);
-          window.location.href = 'error.html?code=400&reason=traversal';
-          return;
-        }
+      // Проверка data: протокола
+      if (url.protocol === 'data:') {
+        e.preventDefault();
+        self.recordViolation('LINK_DATA', 'data: ссылка заблокирована');
+        return;
       }
 
-      // Проверка SQL injection в параметрах
-      if (search) {
-        const params = new URLSearchParams(search);
-        for (const [key, val] of params) {
-          for (const pattern of this.config.sqlPatterns) {
-            pattern.lastIndex = 0;
-            if (pattern.test(val)) {
-              this.recordViolation('URL_SQL', `SQL injection в параметре: ${key}`);
-              window.location.href = 'error.html?code=400&reason=sqli';
-              return;
+      // Проверка внешних ссылок — добавляем rel=noopener
+      if (url.hostname !== window.location.hostname) {
+        link.setAttribute('rel', 'noopener noreferrer');
+        link.setAttribute('target', '_blank');
+      }
+    } catch (err) {
+      // Невалидный URL — блокируем
+      e.preventDefault();
+      self.recordViolation('LINK_INVALID', `Невалидный URL: ${href}`);
+    }
+  }, true);
+
+  this.log('🔒 Link Protection: активен');
+},
+
+/* ═══════════════════════════════════════════════════════════════════
+   МОДУЛЬ 11: DOM PROTECTION (Mutation Security)
+   ═══════════════════════════════════════════════════════════════════ */
+domProtection() {
+  const self = this;
+
+  // Белый список разрешённых доменов для iframe
+  const allowedIframeDomains = ['youtube.com', 'youtu.be', 'google.com', 'vimeo.com', 'vk.com'];
+  const dangerousTags = ['object', 'embed', 'applet', 'base'];
+
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === 1) {
+          const tag = node.tagName.toLowerCase();
+          if (tag === 'iframe') {
+            const src = node.getAttribute('src') || '';
+            const isAllowed = allowedIframeDomains.some(domain => src.includes(domain));
+            if (!isAllowed) {
+              node.remove();
+              self.recordViolation('DOM_DANGEROUS_TAG', `<iframe src="${src}"> удалён из DOM (не в белом списке)`);
+            }
+          } else if (dangerousTags.includes(tag)) {
+            node.remove();
+            self.recordViolation('DOM_DANGEROUS_TAG', `<${tag}> удалён из DOM`);
+          }
+        }
+      });
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+  });
+
+  // Защита критических элементов от удаления
+  const protectSelectors = ['head', 'body', '.header', '#bg-particles-canvas'];
+  const protectObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.removedNodes.forEach((node) => {
+        if (node.nodeType === 1) {
+          for (const sel of protectSelectors) {
+            if (node.matches && node.matches(sel)) {
+              self.recordViolation('DOM_CRITICAL_REMOVE', `Попытка удаления критического элемента: ${sel}`);
             }
           }
         }
-      }
-
-      this.log('🔒 URL Protection: активен');
-    },
-
-    /* ═══════════════════════════════════════════════════════════════════
-       МОДУЛЬ 13: HEADER PROTECTION (мета-теги безопасности)
-       ═══════════════════════════════════════════════════════════════════ */
-    headerProtection() {
-      const heads = {
-        'X-Content-Type-Options': 'nosniff',
-        'X-Frame-Options': 'DENY',
-        'Referrer-Policy': 'strict-origin-when-cross-origin',
-        'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-      };
-
-      for (const [name, value] of Object.entries(heads)) {
-        if (!document.querySelector(`meta[http-equiv="${name}"]`)) {
-          const meta = document.createElement('meta');
-          meta.httpEquiv = name;
-          meta.content = value;
-          document.head.appendChild(meta);
-        }
-      }
-
-      this.log('🔒 Header Protection: активен (meta-теги)');
-    },
-
-    /* ═══════════════════════════════════════════════════════════════════
-       МОДУЛЬ 14: DEVTOOLS DETECTION (опционально)
-       ═══════════════════════════════════════════════════════════════════ */
-    devToolsDetection() {
-      const self = this;
-      let devToolsOpen = false;
-
-      const threshold = 160;
-      const check = () => {
-        const widthThreshold = window.outerWidth - window.innerWidth > threshold;
-        const heightThreshold = window.outerHeight - window.innerHeight > threshold;
-        if (widthThreshold || heightThreshold) {
-          if (!devToolsOpen) {
-            devToolsOpen = true;
-            self.log('🔧 DevTools обнаружены (информационно)', 'warn');
-          }
-        } else {
-          devToolsOpen = false;
-        }
-      };
-
-      setInterval(check, 2000);
-      this.log('🔒 DevTools Detection: активен');
-    },
-
-    /* ═══════════════════════════════════════════════════════════════════
-       МОДУЛЬ 15: COPY PROTECTION (опционально)
-       ═══════════════════════════════════════════════════════════════════ */
-    copyProtection() {
-      document.addEventListener('copy', (e) => {
-        const selectedText = window.getSelection().toString();
-        if (selectedText.length > 200) {
-          e.clipboardData.setData('text/plain',
-            selectedText + '\n\n© SWITCH Web Studio — switch-studio.ru');
-          e.preventDefault();
-        }
       });
+    });
+  });
 
-      this.log('🔒 Copy Protection: активен');
-    },
+  protectObserver.observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+  });
 
-    /* ═══════════════════════════════════════════════════════════════════
-       МОДУЛЬ 16: ERROR BOUNDARY (перехват глобальных ошибок)
-       ═══════════════════════════════════════════════════════════════════ */
-    errorBoundary() {
-      const self = this;
+  this.log('🔒 DOM Protection: активен');
+},
 
-      window.addEventListener('error', (e) => {
-        self.log(`Ошибка: ${e.message} в ${e.filename}:${e.lineno}`, 'error');
-      });
+/* ═══════════════════════════════════════════════════════════════════
+   МОДУЛЬ 12: URL PROTECTION
+   ═══════════════════════════════════════════════════════════════════ */
+urlProtection() {
+  const url = window.location.href;
+  const search = window.location.search;
+  const hash = window.location.hash;
 
-      window.addEventListener('unhandledrejection', (e) => {
-        self.log(`Unhandled Promise: ${e.reason}`, 'error');
-      });
-
-      this.log('🔒 Error Boundary: активен');
-    },
-  };
-
-  /* ─── Запуск ─── */
-  if (SWITCH_SHIELD.checkBlocked()) return;
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => SWITCH_SHIELD.init());
-  } else {
-    SWITCH_SHIELD.init();
+  // Проверка URL на XSS
+  if (this.detectXSS(decodeURIComponent(url))) {
+    this.recordViolation('URL_XSS', 'XSS паттерн в URL');
+    window.location.href = 'error.html?code=400&reason=xss';
+    return;
   }
 
-  // Экспорт для отладки (только в dev)
-  window.__SWITCH_SHIELD = SWITCH_SHIELD;
+  // Проверка path traversal
+  for (const pattern of this.config.pathTraversalPatterns) {
+    pattern.lastIndex = 0;
+    if (pattern.test(url)) {
+      this.recordViolation('URL_TRAVERSAL', `Path traversal: ${url}`);
+      window.location.href = 'error.html?code=400&reason=traversal';
+      return;
+    }
+  }
 
-})();
+  // Проверка SQL injection в параметрах
+  if (search) {
+    const params = new URLSearchParams(search);
+    for (const [key, val] of params) {
+      for (const pattern of this.config.sqlPatterns) {
+        pattern.lastIndex = 0;
+        if (pattern.test(val)) {
+          this.recordViolation('URL_SQL', `SQL injection в параметре: ${key}`);
+          window.location.href = 'error.html?code=400&reason=sqli';
+          return;
+        }
+      }
+    }
+  }
+
+  this.log('🔒 URL Protection: активен');
+},
+
+/* ═══════════════════════════════════════════════════════════════════
+   МОДУЛЬ 13: HEADER PROTECTION (мета-теги безопасности)
+   ═══════════════════════════════════════════════════════════════════ */
+headerProtection() {
+  const heads = {
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+  };
+
+  for (const [name, value] of Object.entries(heads)) {
+    if (!document.querySelector(`meta[http-equiv="${name}"]`)) {
+      const meta = document.createElement('meta');
+      meta.httpEquiv = name;
+      meta.content = value;
+      document.head.appendChild(meta);
+    }
+  }
+
+  this.log('🔒 Header Protection: активен (meta-теги)');
+},
+
+/* ═══════════════════════════════════════════════════════════════════
+   МОДУЛЬ 14: DEVTOOLS DETECTION (опционально)
+   ═══════════════════════════════════════════════════════════════════ */
+devToolsDetection() {
+  const self = this;
+  let devToolsOpen = false;
+
+  const threshold = 160;
+  const check = () => {
+    const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+    const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+    if (widthThreshold || heightThreshold) {
+      if (!devToolsOpen) {
+        devToolsOpen = true;
+        self.log('🔧 DevTools обнаружены (информационно)', 'warn');
+      }
+    } else {
+      devToolsOpen = false;
+    }
+  };
+
+  setInterval(check, 2000);
+  this.log('🔒 DevTools Detection: активен');
+},
+
+/* ═══════════════════════════════════════════════════════════════════
+   МОДУЛЬ 15: COPY PROTECTION (опционально)
+   ═══════════════════════════════════════════════════════════════════ */
+copyProtection() {
+  document.addEventListener('copy', (e) => {
+    const selectedText = window.getSelection().toString();
+    if (selectedText.length > 200) {
+      e.clipboardData.setData('text/plain',
+        selectedText + '\n\n© SWITCH Web Studio — switch-studio.ru');
+      e.preventDefault();
+    }
+  });
+
+  this.log('🔒 Copy Protection: активен');
+},
+
+/* ═══════════════════════════════════════════════════════════════════
+   МОДУЛЬ 16: ERROR BOUNDARY (перехват глобальных ошибок)
+   ═══════════════════════════════════════════════════════════════════ */
+errorBoundary() {
+  const self = this;
+
+  window.addEventListener('error', (e) => {
+    self.log(`Ошибка: ${e.message} в ${e.filename}:${e.lineno}`, 'error');
+  });
+
+  window.addEventListener('unhandledrejection', (e) => {
+    self.log(`Unhandled Promise: ${e.reason}`, 'error');
+  });
+
+  this.log('🔒 Error Boundary: активен');
+},
+  };
+
+/* ─── Запуск ─── */
+if (SWITCH_SHIELD.checkBlocked()) return;
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => SWITCH_SHIELD.init());
+} else {
+  SWITCH_SHIELD.init();
+}
+
+// Экспорт для отладки (только в dev)
+window.__SWITCH_SHIELD = SWITCH_SHIELD;
+
+}) ();
 
 // ===== ГЕНЕРАЦИЯ CSRF-ТОКЕНА =====
-(function() {
+(function () {
   const csrfInput = document.getElementById('csrf_token');
   if (csrfInput) {
     csrfInput.value = btoa(Math.random().toString(36).substring(2) + Date.now().toString(36));
@@ -958,10 +958,10 @@
 })();
 
 // ===== ВАЛИДАЦИЯ ФОРМЫ ПЕРЕД ОТПРАВКОЙ =====
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('web3forms-contact-form');
   if (form) {
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', function (e) {
       const name = document.getElementById('form-name');
       const message = document.getElementById('form-message');
       let hasError = false;

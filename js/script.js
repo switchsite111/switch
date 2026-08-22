@@ -150,6 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
+    if (typeof updateCalculator === 'function') {
+      updateCalculator();
+    }
   }
 
   // 2. Header Scroll Effect
@@ -190,13 +193,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  function handleScrollSpy() {
+    const scrollPosition = window.scrollY + 220;
+    let currentSectionId = '';
+
+    sections.forEach(sec => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      if (scrollPosition >= top && scrollPosition < top + height) {
+        currentSectionId = sec.id;
+      }
+    });
+
+    if (currentSectionId) {
+      updateActiveNavLink(currentSectionId);
+    }
+  }
+
+  window.addEventListener('scroll', handleScrollSpy, { passive: true });
+  handleScrollSpy();
+
   const sectionObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         updateActiveNavLink(entry.target.id);
       }
     });
-  }, { threshold: 0.35 });
+  }, { threshold: 0.15 });
 
   sections.forEach(sec => sectionObserver.observe(sec));
 
@@ -267,10 +290,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const calcFeaturePills = document.querySelectorAll('#calc-features .calc-pill');
   const calcPriceVal = document.getElementById('calc-price-val');
   const calcTimeVal = document.getElementById('calc-time-val');
+  const calcTypeDesc = document.getElementById('calc-type-desc');
   const calcApplyBtn = document.getElementById('calc-apply-btn');
 
-  let basePrice = 35000;
-  let baseDays = 4;
+  let basePrice = 9900;
+  let baseTimeRu = "2–4 дня";
+  let baseTimeEn = "2–4 days";
+  let baseDescRu = "Лендинг пейдж (Landing Page) — одностраничный веб-сайт, сфокусированный на максимальной конверсии посетителей в заявки и быстром запуске бизнеса.";
+  let baseDescEn = "Landing Page — a single-page website focused on maximum visitor conversion into leads and fast business launch.";
   let featuresPrice = 0;
   let currentSiteType = "Лендинг пейдж";
 
@@ -280,7 +307,14 @@ document.addEventListener('DOMContentLoaded', () => {
       calcPriceVal.textContent = `${totalPrice.toLocaleString('ru-RU')} ₽`;
     }
     if (calcTimeVal) {
-      calcTimeVal.textContent = `Примерный срок: ${baseDays}-7 дней`;
+      const isEn = window.currentLang === 'en';
+      const prefix = isEn ? 'Estimated Time: ' : 'Примерный срок: ';
+      const timeStr = isEn ? baseTimeEn : baseTimeRu;
+      calcTimeVal.textContent = `${prefix}${timeStr}`;
+    }
+    if (calcTypeDesc) {
+      const isEn = window.currentLang === 'en';
+      calcTypeDesc.textContent = isEn ? baseDescEn : baseDescRu;
     }
   }
 
@@ -288,8 +322,11 @@ document.addEventListener('DOMContentLoaded', () => {
     pill.addEventListener('click', () => {
       calcTypePills.forEach(p => p.classList.remove('active'));
       pill.classList.add('active');
-      basePrice = parseInt(pill.dataset.price, 10) || 35000;
-      baseDays = parseInt(pill.dataset.days, 10) || 4;
+      basePrice = parseInt(pill.dataset.price, 10) || 9900;
+      baseTimeRu = pill.dataset.timeRu || '2–4 дня';
+      baseTimeEn = pill.dataset.timeEn || '2–4 days';
+      baseDescRu = pill.dataset.descRu || '';
+      baseDescEn = pill.dataset.descEn || '';
       currentSiteType = pill.textContent.trim();
       updateCalculator();
     });
