@@ -1,3 +1,13 @@
 User-agent: *
 Allow: /
+Disallow: /*?*
+Disallow: /admin/
+
+User-agent: Yandex
+Allow: /
+Disallow: /*?*
+Disallow: /admin/
+Clean-param: utm_source&utm_medium&utm_campaign&gclid&yclid
+
+Host: https://switch-studio.ru
 Sitemap: https://switch-studio.ru/sitemap.xml
